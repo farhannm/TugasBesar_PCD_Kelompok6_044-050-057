@@ -22,6 +22,34 @@
     .face-video {
       transform: scaleX(-1);
     }
+
+    #birdSelectionModal img {
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    #birdSelectionModal img:hover {
+      transform: scale(1.1);
+    }
+
+    #birdSelectionModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    #birdSelectionModal.show {
+      display: block;
+    }
   </style>
 </head>
 
@@ -34,22 +62,6 @@
             <p class="text-sky-100">Control the bird with your nose movement!</p>
         </div>
 
-        <!-- Game Stats -->
-        <!-- <div class="flex justify-center mb-6">
-            <div class="bg-white/20 backdrop-blur-md rounded-lg p-4 shadow-lg">
-                <div class="flex space-x-8 text-white">
-                    <div class="text-center">
-                        <div class="text-2xl font-bold" id="score">0</div>
-                        <div class="text-sm opacity-80">Score</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold" id="highscore">0</div>
-                        <div class="text-sm opacity-80">High Score</div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
         <!-- Main Game Area -->
         <div class="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
             <!-- Game Canvas -->
@@ -61,11 +73,31 @@
                 </div>
 
                 <!-- Game Controls -->
-                <div class="mt-4 text-center">
-                    <button id="restartBtn"
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
-                        Restart
-                    </button>
+                <div class="mt-4 text-center space-y-3">
+                    <!-- Main game controls -->
+                    <div class="flex justify-center space-x-3">
+                        <button id="startBtn"
+                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition hover:scale-105">
+                            Start Game
+                        </button>
+                        <button id="pauseBtn"
+                            class="bg-gray-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg cursor-not-allowed opacity-50 ml-2"
+                            disabled>
+                            Pause
+                        </button>
+                        <button id="restartBtn"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transform transition hover:scale-105">
+                            Restart
+                        </button>
+                        <button id="musicToggleBtn"
+                            class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition hover:scale-105 ml-2">
+                            Music On
+                        </button>
+                        <button id="selectBirdBtn"
+                            class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transform transition hover:scale-105 ml-2">
+                            Select Bird
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -84,7 +116,8 @@
 
                     <!-- Camera Controls -->
                     <div class="mt-3 text-center">
-                        <button id="toggleCamera" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transform transition hover:scale-105">
+                        <button id="toggleCamera"
+                            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transform transition hover:scale-105">
                             Start Camera
                         </button>
                     </div>
@@ -125,20 +158,49 @@
         <div id="gameOverModal"
             class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
             <div class="bg-white rounded-lg p-8 shadow-2xl text-center max-w-md mx-4">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">🎮 Game Over!</h2>
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">💥 Game Over!</h2>
                 <div class="mb-6">
                     <div class="text-2xl font-bold text-blue-600 mb-2">Final Score: <span id="finalScore">0</span></div>
-                    <div class="text-lg text-gray-600">High Score: <span id="modalHighScore">0</span></div>
+                    <div class="text-lg text-gray-600 mb-3">High Score: <span id="modalHighScore">0</span></div>
+                    <div id="restartCountdown" class="text-sm text-orange-600 font-semibold hidden">
+                        Auto restart in 3s
+                    </div>
                 </div>
                 <button id="playAgainBtn"
                     class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition hover:scale-105">
-                    Play Again
+                    🔄 Play Again
                 </button>
             </div>
         </div>
+
+        <!-- Bird Selection Modal -->
+        <div id="birdSelectionModal" class="z-1000">
+            <h3 class="text-lg font-bold mb-4 text-gray-800 text-center">Select Your Bird</h3>
+            <div class="flex justify-center space-x-6 mb-4" id="birdOptions">
+                <img src="/static/assets/bluebird-midflap.png" alt="Blue Bird" data-bird="bird">
+                <img src="/static/assets/redbird-midflap.png" alt="Red Bird" data-bird="redBird">
+                <img src="/static/assets/yellowbird-midflap.png" alt="Yellow Bird" data-bird="yellowBird">
+            </div>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmBirdBtn"
+                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transform transition hover:scale-105">
+                    Select
+                </button>
+                <button id="cancelBirdBtn"
+                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transform transition hover:scale-105">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- Audio Element for Background Music -->
+        <audio id="backgroundMusic" loop>
+            <source src="/static/assets/music-bg.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 
-    <script src="/static/game.js"></script>
+  <script src="/static/game.js"></script>
 </body>
 
 </html>
