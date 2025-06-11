@@ -35,6 +35,9 @@ class FlappyBirdWebGame {
         this.currentBird = 'bird'; // Default bird
         this.previousBird = 'bird';
 
+        // Pipe count
+        this.pipeCount = 0;
+
         this.initializeGame();
     }
 
@@ -66,7 +69,10 @@ class FlappyBirdWebGame {
             yellowBird: '/static/assets/yellowbird-midflap.png',
             pipe: '/static/assets/pipe-green.png',
             base: '/static/assets/base.png',
-            music: '/static/assets/music-bg.mp3' // Optional preload
+            music: '/static/assets/music-bg.mp3', // Optional preload
+            ...Object.fromEntries(
+            Array.from({ length: 10 }, (_, i) => [`number${i}`, `/static/assets/${i}.png`])
+            )
         };
 
         const loadPromises = Object.keys(assetPaths).map(key => {
@@ -527,9 +533,11 @@ class FlappyBirdWebGame {
 
         const scoreElement = document.getElementById('score');
         const highscoreElement = document.getElementById('highscore');
+        const pipeCountElement = document.getElementById('pipeCount');
 
         if (scoreElement) scoreElement.textContent = this.gameState.score;
         if (highscoreElement) highscoreElement.textContent = this.gameState.highscore;
+        if (pipeCountElement) pipeCountElement.textContent = this.gameState.pipe_count; // Tambahkan ini
 
         if (this.gameState.show_restart_dialog) {
             const countdownElement = document.getElementById('countdownTimer');
@@ -561,6 +569,12 @@ class FlappyBirdWebGame {
             this.drawBird();
             this.drawGround();
             
+
+            // Draw total pipes that have been passed
+            if (this.gameMode === 'playing' && !this.gameState.preview_mode) {
+                this.drawNumber(this.gameState.pipe_count, this.canvas.width / 2 - 20, 20);
+            }
+
             // Draw game mode indicator
             if (this.gameMode === 'preview') {
                 this.drawPreviewOverlay();
@@ -735,6 +749,7 @@ class FlappyBirdWebGame {
         
         document.getElementById('finalScore').textContent = this.gameState.score;
         document.getElementById('modalHighScore').textContent = this.gameState.highscore;
+        document.getElementById('finalPipeCount').textContent = this.gameState.pipe_count;
         
         document.getElementById('gameOverModal').classList.remove('hidden');
         this.showStatus(`Game Over! Score: ${this.gameState.score}`, 'info');
@@ -898,6 +913,19 @@ class FlappyBirdWebGame {
         this.ctx.fillText('PAUSED', this.canvas.width / 2, this.canvas.height / 2);
         this.ctx.font = '18px Arial';
         this.ctx.fillText('Click Resume to continue playing', this.canvas.width / 2, this.canvas.height / 2 + 40);
+    }
+
+    drawNumber(number, x, y, digitWidth = 24, digitHeight = 36) {
+        const digits = number.toString().split('');
+        let offsetX = x;
+        
+        digits.forEach(digit => {
+            const img = this.images[`number${digit}`];
+            if (img) {
+                this.ctx.drawImage(img, offsetX, y, digitWidth, digitHeight);
+                offsetX += digitWidth + 2; // Jarak antar digit
+            }
+        });
     }
 }
 

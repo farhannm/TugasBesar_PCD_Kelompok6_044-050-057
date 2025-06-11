@@ -22,6 +22,7 @@ class Game:
         self.pipe_speed = 0.2  # Start slow
         self.max_pipe_speed = 0.8  # Maximum speed
         self.speed_increase_rate = 0.02  # How fast speed increases
+        self.pipe_count = 0  # Total pipes passed
         
         # Timing
         self.last_pipe_time = time.time()
@@ -56,8 +57,9 @@ class Game:
         self.preview_mode_active = False
         self.game_start_time = time.time()
         self.pipes = [{"x": 15, "gap_y": random.randint(3, 7)}]
-        self.pipe_speed = 0.2  # Start slow
+        self.pipe_speed = 0.3  # Start slow
         self.score = 0
+        self.pipe_count = 0
         self.bird_pos_y = 5.0
         self.bird_velocity = 0.0
         self.show_restart_dialog = False
@@ -76,6 +78,7 @@ class Game:
         self.preview_mode_active = True
         self.pipes = []
         self.score = 0
+        self.pipe_count = 0
         self.bird_pos_y = 5.0
         self.bird_velocity = 0.0
         self.show_restart_dialog = False
@@ -158,13 +161,17 @@ class Game:
 
     def check_scoring(self):
         """Check if bird passed through pipe for scoring"""
+        scored_this_frame = False  # Flag untuk mencegah penghitungan ganda dalam satu frame
         for pipe in self.pipes:
-            if 1.0 <= pipe["x"] <= 3.0 and not hasattr(pipe, 'scored'):
+            # Periksa hanya saat pipa baru saja melewati posisi burung (x sekitar 2.0)
+            if not scored_this_frame and not hasattr(pipe, 'scored') and 1.8 <= pipe["x"] < 2.0:
                 gap_start = pipe["gap_y"] - 1.5
                 gap_end = pipe["gap_y"] + 1.5
                 if gap_start <= self.bird_pos_y <= gap_end:
                     self.score += 10
+                    self.pipe_count += 1
                     pipe['scored'] = True
+                    scored_this_frame = True  # Tandai bahwa sudah mencetak skor di frame ini
 
     def check_collisions(self):
         """Check for collisions with pipes or boundaries"""
@@ -195,6 +202,7 @@ class Game:
             "pipes": self.pipes if not self.preview_mode_active else [],
             "score": self.score,
             "highscore": self.highscore,
+            "pipe_count": self.pipe_count,
             "game_over": self.game_mode == "game_over",
             "game_mode": self.game_mode,
             "preview_mode": self.preview_mode_active,
