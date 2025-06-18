@@ -1,6 +1,6 @@
-# 🐦 Flappy Bird Face Control Web Game
+# Flappy Bird Media Pipe Face Mesh
 
-Implementasi berbasis web dari permainan Flappy Bird yang menggunakan deteksi MediaPipe Face Mesh untuk mengendalikan burung dengan gerakan hidung. Gerakkan kepala Anda ke atas dan ke bawah untuk mengontrol burung dan hindari pipa!
+Implementasi berbasis web dari permainan Flappy Bird yang menggunakan deteksi MediaPipe Face Mesh untuk mengendalikan burung dengan gerakan hidung. Gerakkan kepala ke atas dan ke bawah untuk mengontrol burung dan hindari pipa!
 
 ##  Fitur
 
@@ -20,16 +20,11 @@ Implementasi berbasis web dari permainan Flappy Bird yang menggunakan deteksi Me
 
 ### 1. Installation & Setup
 ```bash
-git clone <url-repositori-anda>
-cd flappy_bird_web
+git clone <https://github.com/farhannm/TugasBesar_PCD_Kelompok6_044-050-057.git>
+cd TugasBesar_PCD_Kelompok6_044-050-057
 ```
 
-### 2. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Activate Python Environment
+### 2. Activate Python Environment
 Untuk **Windows**:
 ```bash
 python -m venv venv
@@ -42,6 +37,11 @@ python -m venv venv
 source venv/bin/activate
 ```
 
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt    
+```
+
 ### 4. Run the Server
 Jalankan server menggunakan salah satu dari opsi berikut:
 
@@ -50,9 +50,14 @@ Jalankan server menggunakan salah satu dari opsi berikut:
 python main.py
 ```
 
-**Menggunakan Uvicorn** (pastikan `uvicorn` telah terinstal melalui `requirements.txt`):
+**Menggunakan Uvicorn**:
 ```bash
 uvicorn main:app --reload
+```
+
+### 5. Menjalankan Jupyter Notebook
+```bash
+jupyter notebook
 ```
 
 Server akan berjalan di `http://localhost:8000` atau `http://127.0.0.1:8000`
@@ -84,7 +89,7 @@ flappy_bird_web/
 ├── static/
 │   ├── index.html              # Antarmuka permainan utama
 │   ├── game.js                 # Logika permainan frontend
-│   └── assets/                 # Sprite dan gambar permainan
+│   └── assets/                 # Sprite dan asset permainan
 │
 ├── data/
 │   └── highscore.txt           # Penyimpanan skor tertinggi
@@ -103,7 +108,6 @@ flappy_bird_web/
 ### Frontend (JavaScript)
 - **HTML5 Canvas**: Rendering permainan
 - **WebSocket API**: Komunikasi real-time
-- **MediaDevices API**: Akses kamera
 - **Tailwind CSS**: Gaya responsif modern
 
 ### Mekanisme Permainan
@@ -112,7 +116,7 @@ flappy_bird_web/
 - **Gerakan Halus**: Pergerakan pipa yang diinterpolasi
 - **Sistem Skor**: Poin diberikan untuk melewati pipa
 
-## 📄 Lisensi
+## Tim Pengembang
 
 **Kelompok 6** - PCD2025 - Jurusan Teknik Komputer dan Informatika, Politeknik Negeri Bandung 
 1. Farhan Maulana - *231511044*
