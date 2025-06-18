@@ -1,3 +1,4 @@
+![Flappy Bird Mediapipe Face Mesh](thumbnail.png)
 # Flappy Bird Media Pipe Face Mesh
 
 Implementasi berbasis web dari permainan Flappy Bird yang menggunakan deteksi MediaPipe Face Mesh untuk mengendalikan burung dengan gerakan hidung. Gerakkan kepala ke atas dan ke bawah untuk mengontrol burung dan hindari pipa!
